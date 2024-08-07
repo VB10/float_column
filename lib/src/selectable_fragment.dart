@@ -126,6 +126,7 @@ class SelectableFragment
                 isEnd: edgeUpdate.type == SelectionEventType.endEdgeUpdate);
           case TextGranularity.document:
           case TextGranularity.line:
+          case TextGranularity.paragraph:
             assert(
                 false,
                 'Moving the selection edge by line or '
@@ -139,6 +140,7 @@ class SelectableFragment
         result = _handleSelectAll();
         break;
       case SelectionEventType.selectWord:
+      case SelectionEventType.selectParagraph:
         final selectWord = event as SelectWordSelectionEvent;
         result = _handleSelectWord(selectWord.globalPosition);
         break;
@@ -160,6 +162,7 @@ class SelectableFragment
           directionallyExtendSelection.direction,
         );
         break;
+      // TODO: Handle this case.
     }
 
     if (existingSelectionStart != textSelectionStart ||
@@ -656,6 +659,7 @@ class SelectableFragment
         result = SelectionResult.end;
         break;
       case TextGranularity.line:
+      case TextGranularity.paragraph:
         newPosition = _moveToTextBoundaryAtDirection(
             targetedEdge, forward, LineBoundary(this));
         result = SelectionResult.end;
@@ -672,6 +676,8 @@ class SelectableFragment
           result = SelectionResult.end;
         }
         break;
+
+      // TODO: Handle this case.
     }
 
     if (isExtent) {
